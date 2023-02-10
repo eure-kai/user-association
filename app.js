@@ -1,3 +1,6 @@
+
+const db = require('./db/db_connection.js');
+
 //set up the server
 const express = require( "express" );
 const app = express();
@@ -16,14 +19,39 @@ app.get( "/", ( req, res ) => {
 } );
 
 // define a route for the planner page
+const read_planner_sql = `
+    SELECT
+        id, eventName, description, time, location
+    FROM
+        planner
+`
+
 app.get( "/planner", ( req, res) => {
-    res.sendFile( __dirname + "/views/planner.html" );
-} );
+    db.execute(read_planner_sql, (error, results) => {
+        if (error)
+            res.status(500).send(error);
+        else   
+            res.send(results);    
+    });
+});
 
 //define a route for the event page
-app.get( "/planner/event", ( req, res ) => {
-    res.sendFile( __dirname + "/views/event.html" );
-} );
+const read_event_sql = `
+    SELECT
+        eventName, description, time, location
+    FROM
+        planner
+    WHERE
+        id = ?
+`
+app.get( "/planner/event/:id", ( req, res ) => {
+    db.execute(read_event_sql, [req.params.id], (error, results) => {
+        if (error)
+            res.status(500).send(error);
+        else   
+            res.send(results[0]);
+    });        
+});
 
 
 // start the server
