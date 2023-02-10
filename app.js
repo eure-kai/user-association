@@ -48,6 +48,8 @@ app.get( "/planner/event/:id", ( req, res ) => {
     db.execute(read_event_sql, [req.params.id], (error, results) => {
         if (error)
             res.status(500).send(error);
+        else if (results.length == 0)
+            res.status(404).send(`No item found with id = "{req.params.id}"`);    
         else   
             res.send(results[0]);
     });        
