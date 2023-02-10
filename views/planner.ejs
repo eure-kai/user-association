@@ -33,54 +33,20 @@
                 </thead>
             
                 <tbody>
+                    <% for (let i = 0; i < inventory.length; i++) { %> 
                     <tr>
-                        <td>Mr. Krabs</td>
-                        <td>Walk my dog after I eat breakfast</th>
-                        <td>10:00-10:30 AM</td>
-                        <td>Lions Park</td>
+                        <td><%= inventory[i].eventName %></td>
+                        <td><%= inventory[i].description %></td>
+                        <td><%= inventory[i].time %></td>
+                        <td><%= inventory[i].location %></td>
                         <td>
-                            <a class="btn-small waves-effect waves-light" href="/planner/event">
-                                <i class="material-icons right">edit</i>
-                                Info/Edit
-                            </a>
+                            <a class="btn-small waves-effect waves-light" href=<%= "/planner/event/" + inventory[i].id %> >
+                                <i class="material-icons right">edit</i>Info/Edit</a>
                             <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Event deleted!'})">
-                                <i class="material-icons right">delete</i>
-                                Delete
-                            </a>
-                        </td>
+                                <i class="material-icons right">delete</i>Delete</a>
+                        </td>    
                     </tr>
-                    <tr>
-                        <th>Tony's Party <i class="material-icons" title="Important!">info_outline</i></th>
-                        <td>My best friend's birthday party!</td>
-                        <td>1:00-5:30 PM</td>
-                        <td>Palisades Mall</td>
-                        <td>
-                            <a class="btn-small waves-effect waves-light" href="/planner/event">
-                                <i class="material-icons right">edit</i>
-                                Info/Edit
-                            </a>
-                            <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Event deleted!'})" class="btn">
-                                <i class="material-icons right">delete</i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Finish Spanish Project</td>
-                        <td>Need to finish homework after dinner</td>
-                        <td>7:00-9:00 PM</td>
-                        <td>My house</td>
-                        <td>
-                            <a class="btn-small waves-effect waves-light" href="/planner/event">
-                                <i class="material-icons right">edit</i>
-                                Info/Edit
-                            </a>
-                            <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Event deleted!'})">
-                                <i class="material-icons right">delete</i>
-                                Delete
-                            </a>
-                        </td>
-                    </tr>
+                    <% } %>
                 </tbody>
             </table>
         </div>

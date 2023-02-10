@@ -6,6 +6,10 @@ const express = require( "express" );
 const app = express();
 const port = 8080;
 
+//Configure Express to use EJS
+app.set( "views",  __dirname + "/views");
+app.set( "view engine", "ejs" );
+
 //import morgan
 const logger = require("morgan");
 
@@ -15,8 +19,8 @@ app.use(express.static(__dirname + '/public'));
 
 // define a route for the default home page
 app.get( "/", ( req, res ) => {
-    res.sendFile( __dirname + "/views/index.html" );
-} );
+    res.render('index');
+});
 
 // define a route for the planner page
 const read_planner_sql = `
@@ -31,7 +35,7 @@ app.get( "/planner", ( req, res) => {
         if (error)
             res.status(500).send(error);
         else   
-            res.send(results);    
+            res.render('planner', { inventory : results });  
     });
 });
 
@@ -47,11 +51,15 @@ const read_event_sql = `
 app.get( "/planner/event/:id", ( req, res ) => {
     db.execute(read_event_sql, [req.params.id], (error, results) => {
         if (error)
-            res.status(500).send(error);
+            res.status(500).send(error); //Internal Server Error
         else if (results.length == 0)
             res.status(404).send(`No item found with id = "{req.params.id}"`);    
-        else   
-            res.send(results[0]);
+        else {
+            let data = results[0]; //results is still an array
+            //data's object structure:
+            // { eventName: ___ , description: ____, time: ____, location: ____}
+            res.render('event', data);
+        }  
     });        
 });
 
