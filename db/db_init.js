@@ -9,17 +9,17 @@ db.execute(drop_stuff_table_sql);
 
 /**** Create "stuff" table (again)  ****/
 
-const create_stuff_table_sql = `
-    CREATE TABLE planner (
-        id INT NOT NULL AUTO_INCREMENT,
-        eventName VARCHAR(45) NOT NULL,
-        description VARCHAR(150) NULL,
-        time VARCHAR(45) NULL,
-        location VARCHAR(45) NULL,
-        PRIMARY KEY (id)
-    );
-`
-db.execute(create_stuff_table_sql);
+// const create_stuff_table_sql = `
+//     CREATE TABLE planner (
+//         id INT NOT NULL AUTO_INCREMENT,
+//         eventName VARCHAR(45) NOT NULL,
+//         description VARCHAR(150) NULL,
+//         time VARCHAR(45) NULL,
+//         location VARCHAR(45) NULL,
+//         PRIMARY KEY (id)
+//     );
+// `
+// db.execute(create_stuff_table_sql);
 
 
 /**** Create some sample items ****/

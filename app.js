@@ -39,6 +39,25 @@ app.get( "/planner", ( req, res) => {
     });
 });
 
+//define a route for the event delete
+const delete_event_sql = `
+    DELETE
+    FROM
+        planner
+    WHERE
+        id = ?
+`
+
+app.get("/planner/event/:id/delete", ( req, res ) => {
+    db.execute(delete_event_sql, [req.params.id], (error, results) => {
+        if (error)
+            res.status(500).send(error);
+        else
+            res.redirect("/planner");    
+    });
+})
+
+
 //define a route for the event page
 const read_event_sql = `
     SELECT
