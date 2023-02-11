@@ -16,16 +16,19 @@ const logger = require("morgan");
 // define middleware that logs all incoming requests
 app.use(logger("dev"));
 app.use(express.static(__dirname + '/public'));
+
 // Configure Express to parse URL-encoded POST request bodies (traditional forms)
 app.use( express.urlencoded({ extended: false }) );
+
 
 // define a route for the default home page
 app.get( "/", ( req, res ) => {
     res.render('index');
 });
 
+
 // define a route for the planner page
-const read_planner_sql = `
+const read_planner_all_sql = `
     SELECT
         id, eventName, description, time, location
     FROM
@@ -33,13 +36,39 @@ const read_planner_sql = `
 `
 
 app.get( "/planner", ( req, res) => {
-    db.execute(read_planner_sql, (error, results) => {
+    db.execute(read_planner_all_sql, (error, results) => {
         if (error)
             res.status(500).send(error);
         else   
             res.render('planner', { inventory : results });  
     });
 });
+
+
+//define a route for the event page
+const read_event_sql = `
+    SELECT
+        id, eventName, description, time, location
+    FROM
+        planner
+    WHERE
+        id = ?
+`
+
+app.get( "/planner/event/:id", ( req, res ) => {
+    db.execute(read_event_sql, [req.params.id], (error, results) => {
+        if (error)
+            res.status(500).send(error); //Internal Server Error
+        else if (results.length == 0)
+            res.status(404).send(`No event found with id = "${req.params.id}"` ); // NOT FOUND
+        else {
+            let data = results[0];
+            //  { id: ___, item: ___ , quantity:___ , description: ____ }
+            res.render('event', data);
+        }
+    });
+});
+
 
 //define a route for the event delete
 const delete_event_sql = `
@@ -60,29 +89,47 @@ app.get("/planner/event/:id/delete", ( req, res ) => {
 })
 
 
-//define a route for the event page
-const read_event_sql = `
-    SELECT
-        eventName, description, time, location
-    FROM
+
+//define a route for the event create
+const create_event_sql = `
+    INSERT INTO planner
+        (eventName, description)
+    VALUES
+        (?, ?)
+`
+
+app.post("/planner", ( req, res ) => {
+    db.execute(create_event_sql, [req.body.eventName, req.body.description], (error, results) => {
+        if (error)
+            res.status(500).send(error); //Internal Server Error
+        else 
+            //results.insertId has the primary key (id) of the newly inserted element.
+            res.redirect(`/planner/event/${results.insertId}`);
+    });
+})
+
+
+// define a route for event UPDATE
+const update_event_sql = `
+    UPDATE
         planner
+    SET
+        eventName = ?,
+        description = ?,
+        time = ?,
+        location = ?
     WHERE
         id = ?
 `
-app.get( "/planner/event/:id", ( req, res ) => {
-    db.execute(read_event_sql, [req.params.id], (error, results) => {
+app.post("/planner/event/:id", ( req, res ) => {
+    db.execute(update_event_sql, [req.body.eventName, req.body.description, req.body.time, req.body.location, req.params.id], (error, results) => {
         if (error)
             res.status(500).send(error); //Internal Server Error
-        else if (results.length == 0)
-            res.status(404).send(`No item found with id = "{req.params.id}"`);    
-        else {
-            let data = results[0]; //results is still an array
-            //data's object structure:
-            // { eventName: ___ , description: ____, time: ____, location: ____}
-            res.render('event', data);
-        }  
-    });        
-});
+        else
+            res.redirect(`/planner/event/${req.params.id}`);
+        
+    });
+})
 
 
 // start the server
