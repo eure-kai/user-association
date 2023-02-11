@@ -16,6 +16,8 @@ const logger = require("morgan");
 // define middleware that logs all incoming requests
 app.use(logger("dev"));
 app.use(express.static(__dirname + '/public'));
+// Configure Express to parse URL-encoded POST request bodies (traditional forms)
+app.use( express.urlencoded({ extended: false }) );
 
 // define a route for the default home page
 app.get( "/", ( req, res ) => {

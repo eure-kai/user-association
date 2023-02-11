@@ -53,41 +53,35 @@
 
         <div class="section" id="addEvents">
             <h3>Add an event:</h3>
-            <form>
+            <form method="post" action="/planner">
                 <div class="row">
                             
                     <div class="input-field col s6">
                         <label for="event_name">Event Name</label>
-                        <input id="event_name" type="text" class="validate" data-length="32" required>
+                        <input type="text" name="eventName" id="eventNameInput" class="validate" data-length="32" required>
                     </div>
                     <div class="input-field col s6">
                         <label for="desc">Description</label>
-                        <input id="desc" placeholder="Enter your description here" type="text" class="validate" data-length="32" required>
+                        <input type="text" name="description" id="descriptionInput" placeholder="Enter your description here" class="validate" data-length="32" required>
                     </div>
                 </div>    
                 
                 <div class="row">
                     <div class="input-field col s6">
-                        Time Start:
+                        Time:
                         <div class="input-field inline">
-                            <label for="timee"></label>
-                            <input id="timee" type="time" class="validate" required>
+                            <input type="text" name="time" id="timeInput" class="validate" data-length="32" required>
                         </div>
                     </div>
-                    <div class="input-field col s6">
-                        Time End:
-                        <div class="input-field inline">
-                            <label for="timeee"></label>
-                            <input id="timeee" type="time" class="validate" required>
-                        </div>
-                    </div>
+                </div>
+                <div class="row">    
                     <div class="input-field col s6">
                         Location: 
                         <div class="input-field inline">
-                            <label for="loc"></label>    
-                            <input id="loc" placeholder="New York City" type="text" class="validate" data-length="32" required> </div>
+                            <input type="text" name="location" id="locationInput" placeholder="New York City" class="validate" data-length="32" required>
                         </div>
                 </div>
+                <br><br><br><br>
                 <button class="btn waves-effect waves-light" type="submit" onclick="M.toast({html: 'Event added!'})">
                     <i class="material-icons right">done</i>
                     Submit
