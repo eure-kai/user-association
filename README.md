@@ -1,4 +1,8 @@
 # CRUDRoutes
-implementing CRUD routes (labs 4 and 5)
+implementing CRUD routes (lab 4)
+
+"Create" form in planner.ejs
+"Update" form in event.ejs
+"Delete" buttons in planner.ejs and event.ejs
 
 #test
