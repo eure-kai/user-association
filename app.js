@@ -1,10 +1,10 @@
 
-const db = require('./db/db_connection.js');
+const db = require('./db/db_pool.js');
 
 //set up the server
 const express = require( "express" );
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 //Configure Express to use EJS
 app.set( "views",  __dirname + "/views");
@@ -12,6 +12,18 @@ app.set( "view engine", "ejs" );
 
 //import morgan
 const logger = require("morgan");
+
+//configure helmet
+const helmet = require("helmet");
+
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", 'cdnjs.cloudflare.com']
+        }
+    }
+}));
 
 // define middleware that logs all incoming requests
 app.use(logger("dev"));
