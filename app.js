@@ -13,6 +13,11 @@ app.set( "view engine", "ejs" );
 //import morgan
 const logger = require("morgan");
 
+//configure auth
+const { auth } = require('express-openid-connect');
+
+const { requiresAuth } = require('express-openid-connect');
+
 //configure helmet
 const helmet = require("helmet");
 
@@ -25,6 +30,22 @@ app.use(helmet({
     }
 }));
 
+const dotenv = require('dotenv');
+dotenv.config();
+
+//CODE FROM AUTH0:
+const config = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: process.env.AUTH0_SECRET,
+    baseURL: process.env.AUTH0_BASE_URL,
+    clientID: process.env.AUTH0_CLIENT_ID,
+    issuerBaseURL: process.env.AUTH0_ISSUER_BASE_URL
+};
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
+
 // define middleware that logs all incoming requests
 app.use(logger("dev"));
 app.use(express.static(__dirname + '/public'));
@@ -32,6 +53,14 @@ app.use(express.static(__dirname + '/public'));
 // Configure Express to parse URL-encoded POST request bodies (traditional forms)
 app.use( express.urlencoded({ extended: false }) );
 
+app.get('/profile', requiresAuth(), (req, res) => {
+    res.send(JSON.stringify(req.oidc.user));
+});
+
+// req.isAuthenticated is provided from the auth router
+app.get('/authtest', (req, res) => {
+    res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
 
 // define a route for the default home page
 app.get( "/", ( req, res ) => {
