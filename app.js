@@ -46,12 +46,20 @@ const config = {
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
+
+// Configure Express to parse URL-encoded POST request bodies (traditional forms)
+app.use( express.urlencoded({ extended: false }) );
+
 // define middleware that logs all incoming requests
 app.use(logger("dev"));
 app.use(express.static(__dirname + '/public'));
 
-// Configure Express to parse URL-encoded POST request bodies (traditional forms)
-app.use( express.urlencoded({ extended: false }) );
+
+app.use((req, res, next) => {
+    res.locals.isLoggedIn = req.oidc.isAuthenticated();
+    res.locals.user = req.oidc.user;
+    next();
+})
 
 app.get('/profile', requiresAuth(), (req, res) => {
     res.send(JSON.stringify(req.oidc.user));
@@ -74,10 +82,12 @@ const read_planner_all_sql = `
         id, eventName, description, time, location
     FROM
         planner
+    WHERE
+        userid = ?
 `
 
-app.get( "/planner", ( req, res) => {
-    db.execute(read_planner_all_sql, (error, results) => {
+app.get( "/planner", requiresAuth(), ( req, res) => {
+    db.execute(read_planner_all_sql, [req.oidc.user.sub], (error, results) => {
         if (error)
             res.status(500).send(error);
         else   
@@ -94,10 +104,12 @@ const read_event_sql = `
         planner
     WHERE
         id = ?
+    AND
+        userid = ?
 `
 
-app.get( "/planner/event/:id", ( req, res ) => {
-    db.execute(read_event_sql, [req.params.id], (error, results) => {
+app.get( "/planner/event/:id", requiresAuth(), ( req, res ) => {
+    db.execute(read_event_sql, [req.params.id, req.oidc.user.sub], (error, results) => {
         if (error)
             res.status(500).send(error); //Internal Server Error
         else if (results.length == 0)
@@ -118,34 +130,16 @@ const delete_event_sql = `
         planner
     WHERE
         id = ?
+    AND
+        userid = ?
 `
 
-app.get("/planner/event/:id/delete", ( req, res ) => {
-    db.execute(delete_event_sql, [req.params.id], (error, results) => {
+app.get("/planner/event/:id/delete", requiresAuth(), ( req, res ) => {
+    db.execute(delete_event_sql, [req.params.id, req.oidc.user.sub], (error, results) => {
         if (error)
             res.status(500).send(error);
         else
             res.redirect("/planner");    
-    });
-})
-
-
-
-//define a route for the event create
-const create_event_sql = `
-    INSERT INTO planner
-        (eventName, description)
-    VALUES
-        (?, ?)
-`
-
-app.post("/planner", ( req, res ) => {
-    db.execute(create_event_sql, [req.body.eventName, req.body.description], (error, results) => {
-        if (error)
-            res.status(500).send(error); //Internal Server Error
-        else 
-            //results.insertId has the primary key (id) of the newly inserted element.
-            res.redirect(`/planner/event/${results.insertId}`);
     });
 })
 
@@ -161,17 +155,38 @@ const update_event_sql = `
         location = ?
     WHERE
         id = ?
+    AND
+        userid = ?
 `
-app.post("/planner/event/:id", ( req, res ) => {
-    db.execute(update_event_sql, [req.body.eventName, req.body.description, req.body.time, req.body.location, req.params.id], (error, results) => {
+app.post("/planner/event/:id", requiresAuth(), ( req, res ) => {
+    db.execute(update_event_sql, [req.body.eventName, req.body.description, req.body.time, req.body.location, req.params.id, req.oidc.user.sub], (error, results) => {
         if (error)
             res.status(500).send(error); //Internal Server Error
         else
             res.redirect(`/planner/event/${req.params.id}`);
-        
     });
 })
 
+
+//define a route for the event create
+const create_event_sql = `
+    INSERT INTO planner
+        (eventName, description, userid)
+    VALUES
+        (?, ?, ?)
+`
+
+app.post("/planner", requiresAuth(), ( req, res ) => {
+    console.log("Got request")
+    db.execute(create_event_sql, [req.body.eventName, req.body.description, req.oidc.user.sub], (error, results) => {
+        console.log(error ? error : results);
+        if (error)
+            res.status(500).send(error); //Internal Server Errorf
+        else 
+            //results.insertId has the primary key (id) of the newly inserted element.
+            res.redirect(`/planner/event/${results.insertId}`);
+    });
+})
 
 // start the server
 app.listen( port, () => {

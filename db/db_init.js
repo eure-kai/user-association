@@ -16,6 +16,7 @@ const create_planner_table_sql = `
         description VARCHAR(150) NULL,
         time VARCHAR(45) NULL,
         location VARCHAR(45) NULL,
+        userid VARCHAR(50) NULL,
         PRIMARY KEY (id)
     );
 `
