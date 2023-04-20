@@ -1,2 +1,2 @@
-# auth-stuff
-authentication, authorization, and user-associated data (lab 5)
+# user-association
+user association and CRUD for category
