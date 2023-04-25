@@ -26,7 +26,7 @@
                 <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul id="desktop-nav" class="right hide-on-med-and-down">
                     <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="/planner"><i class="material-icons left">list</i>Planner</a></li>
+                    <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
                     <% if (isLoggedIn) { %>
                         <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
                         <li><a href="/logout" class="btn red">Logout</a></li>                        
@@ -38,7 +38,7 @@
         </nav>
         <ul id="mobile-nav" class="sidenav">
              <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-             <li><a href="/planner"><i class="material-icons left">list</i>Planner</a></li>
+             <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
              <% if (isLoggedIn) { %>
                 <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
                 <li><a href="/logout" class="btn red">Logout</a></li>                        
@@ -50,12 +50,12 @@
 
     <!-- rest of the body -->
     <div class="container">
-        <div class="section" id="eventList">
+        <div class="section" id="taskList">
             <h1>Your schedule:</h1>
             <table class="responsive-table">
                 <thead>
                     <tr>
-                        <th>Event Name</th>
+                        <th>Task Name</th>
                         <th>Description</th>
                         <th>Time</th>
                         <th>Location</th>
@@ -66,14 +66,14 @@
                 <tbody>
                     <% for (let i = 0; i < inventory.length; i++) { %> 
                     <tr>
-                        <td><%= inventory[i].eventName %></td>
+                        <td><%= inventory[i].taskName %></td>
                         <td><%= inventory[i].description %></td>
                         <td><%= inventory[i].time %></td>
                         <td><%= inventory[i].location %></td>
                         <td>
-                            <a class="btn-small waves-effect waves-light" href=<%= "/planner/event/" + inventory[i].id %> >
+                            <a class="btn-small waves-effect waves-light" href=<%= "/tasks/detail/" + inventory[i].id %> >
                                 <i class="material-icons right">edit</i>Info/Edit</a>
-                            <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Event deleted!'})" href="/planner/event/<%= inventory[i].id %>/delete">
+                            <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Task deleted!'})" href="/tasks/detail/<%= inventory[i].id %>/delete">
                                 <i class="material-icons right">delete</i>Delete</a>
                         </td>    
                     </tr>
@@ -82,14 +82,14 @@
             </table>
         </div>
 
-        <div class="section" id="addEvents">
-            <h3>Add an event:</h3>
-            <form method="post" action="/planner">
+        <div class="section" id="addTasks">
+            <h3>Add a task:</h3>
+            <form method="post" action="/tasks">
                 <div class="row">
                             
                     <div class="input-field col s6">
-                        <label for="event_name">Event Name</label>
-                        <input type="text" name="eventName" id="eventNameInput" class="validate" data-length="32" required>
+                        <label for="task_name">Task Name</label>
+                        <input type="text" name="taskName" id="taskNameInput" class="validate" data-length="32" required>
                     </div>
                     <div class="input-field col s6">
                         <label for="desc">Description</label>
@@ -113,7 +113,7 @@
                         </div>
                     </div>    
                 </div>
-                <button class="btn waves-effect waves-light" type="submit" onclick="M.toast({html: 'Event added!'})">
+                <button class="btn waves-effect waves-light" type="submit" onclick="M.toast({html: 'Task added!'})">
                     <i class="material-icons right">done</i>
                     Submit
                 </button>

@@ -24,7 +24,7 @@
                 <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul id="desktop-nav" class="right hide-on-med-and-down">
                     <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="/planner"><i class="material-icons left">list</i>Planner</a></li>
+                    <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
                     <% if (isLoggedIn) { %>
                         <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
                         <li><a href="/logout" class="btn red">Logout</a></li>                        
@@ -36,7 +36,7 @@
         </nav>
         <ul id="mobile-nav" class="sidenav">
              <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-             <li><a href="/planner"><i class="material-icons left">list</i>Planner</a></li>
+             <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
              <% if (isLoggedIn) { %>
                 <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
                 <li><a href="/logout" class="btn red">Logout</a></li>                        
@@ -52,7 +52,7 @@
         <br>
         <h3>Have a <strong><u>super busy</u></strong> schedule? Let's keep track of it together!</h2>
         <br><br><br><br>
-        <a class="waves-effect waves-light btn-large" href="/planner" title="Get started!">
+        <a class="waves-effect waves-light btn-large" href="/tasks" title="Get started!">
             Go to planner
             <i class="material-icons right">arrow_forward</i>
         </a>

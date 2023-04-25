@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Planner</title>
+    <title>Schedule Planner</title>
 
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -26,7 +26,7 @@
                 <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                 <ul id="desktop-nav" class="right hide-on-med-and-down">
                     <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="/planner"><i class="material-icons left">list</i>Planner</a></li>
+                    <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
                     <% if (isLoggedIn) { %>
                         <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
                         <li><a href="/logout" class="btn red">Logout</a></li>                        
@@ -38,7 +38,7 @@
         </nav>
         <ul id="mobile-nav" class="sidenav">
              <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-             <li><a href="/planner"><i class="material-icons left">list</i>Planner</a></li>
+             <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
              <% if (isLoggedIn) { %>
                 <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
                 <li><a href="/logout" class="btn red">Logout</a></li>                        
@@ -51,19 +51,27 @@
     <!-- rest of the body -->
     <div class="container">
         <div class="section flow-text" id="header">
-            <h1>Event details:</h1>
+            <h1><%= taskName %></h1>
             <table class="responsive-table">
-                <tr>
-                    <th><h5><strong><u>Event Name:</strong></u></h5></th>
-                    <td><h5><strong><%= eventName %></strong> <i class="material-icons" title="Important!">info_outline</i></h5></td>
-                </tr>
                 <tr>
                     <th><h5><strong><u>Description:</strong></u></h5></th>
                     <td><h5><%= description %></h5></td>
                 </tr>
                 <tr>
-                    <th><h5><strong><u>Time:</strong></u></h5></th>
-                    <td><h5><%= time %></h5></td>
+                    <th><h5><strong><u>Category:</strong></u></h5></th>
+                    <td><h5><%= categoryName %></h5></td>
+                </tr>
+                <tr>
+                    <th><h5><strong><u>Task Date:</strong></u></h5></th>
+                    <td><h5><%= taskDate %></h5></td>
+                </tr>
+                <tr>
+                    <th><h5><strong><u>Start Time:</strong></u></h5></th>
+                    <td><h5><%= startTimeFormatted %></h5></td>
+                </tr>
+                <tr>
+                    <th><h5><strong><u>End Time:</strong></u></h5></th>
+                    <td><h5><%= endTimeFormatted %></h5></td>
                 </tr>      
                 <tr>
                     <th><h5><strong><u>Location:</strong></u></h5></th>
@@ -72,38 +80,54 @@
             </table>
          </div>
 
-        <div class="section" id="eventControls">
-            <a class="btn-large waves-effect waves-light orange left modal-trigger" href="#eventEdit">
+        <div class="section" id="taskControls">
+            <a class="btn-large waves-effect waves-light orange left modal-trigger" href="#taskEdit">
                 <i class="material-icons right">edit</i>
                 Edit
             </a>
-            <a class="btn-large waves-effect waves-light red right" onclick="M.toast({html: 'Event deleted!'})" href="/planner/event/<%= id %>/delete" %>>
+            <a class="btn-large waves-effect waves-light red right" onclick="M.toast({html: 'Task deleted!'})" href="/tasks/detail/<%= id %>/delete" %>>
                 <i class="material-icons right">delete</i>Delete
             </a>
         </div>
         
-        <div class="modal" id="eventEdit" tabindex="0">
+        <div class="modal" id="taskEdit" tabindex="0">
             <div class="modal-content">
-                <h3>Update event:</h3>
-                <form method="post" action="/planner/event/<%= id%>">
+                <h3>Update task:</h3>
+                <form method="post" action="/tasks/detail/<%= id%>">
                     <div class="row">
-                            
                         <div class="input-field col s6">
-                            <label for="event_name">Event Name</label>
-                            <input type="text" name="eventName" id="eventNameUpdate" class="validate" data-length="32" value="<%= eventName %>" required>
+                            <label for="task_name">Task Name</label>
+                            <input type="text" name="taskName" id="taskNameUpdate" class="validate" data-length="32" value="<%= taskName %>" required>
                         </div>
                         <div class="input-field col s6">
                             <label for="desc">Description</label>
                             <input type="text" name="description" id="descriptionUpdate" placeholder="Enter your description here" class="validate" data-length="32" value="<%= description %>" required>
+                        </div>    
+                        <div class="input-field col s6">
+                            <select type="number" id="categoryInput" name="category" required>
+                                <option value="" disabled> Choose your subject </option>
+                                <option value=1   <% if (categoryId == 1) { %> selected <% } %>> School Assignment </option>
+                                <option value=2   <% if (categoryId == 2) { %> selected <% } %>> School TEST </option>
+                                <option value=3   <% if (categoryId == 3) { %> selected <% } %>> Tutor HW </option>
+                                <option value=4   <% if (categoryId == 4) { %> selected <% } %>> Extracurriculars </option>
+                                <option value=5   <% if (categoryId == 5) { %> selected <% } %>> Important Activity </option>
+                                <option value=6   <% if (categoryId == 6) { %> selected <% } %>> Leisure Time </option>
+                              </select>
+                              <label for="categoryInput">Category:</label>
                         </div>
-                    </div>    
-                    
+                    </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            Time:
-                            <div class="input-field inline">
-                                <input type="text" name="time" id="timeUpdate" class="validate" value="<%= time %>" data-length="32">
-                            </div>
+                            <label for="dat">Task Date</label>
+                            <input type="date" name="date" id="dateUpdate" class="validate" data-length="32" value="<%= taskDate %>" required>
+                        </div>
+                        <div class="input-field col s6">
+                            <label for="stime">Start Time</label>
+                            <input type="time" name="startTime" id="startTimeUpdate" class="validate" data-length="32" value="<%= startTimeFormatted %>" required>
+                        </div>
+                        <div class="input-field col s6">
+                            <label for="etime">End Time</label>
+                            <input type="time" name="endTime" id="endTimeUpdate" class="validate" data-length="32" value="<%= endTimeFormatted %>" required>
                         </div>
                     </div>
                     <div class="row">    
@@ -116,7 +140,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn waves-effect waves-light green" type="submit" onclick="M.toast({html: 'Event updated!'})">
+                        <button class="btn waves-effect waves-light green" type="submit" onclick="M.toast({html: 'Task updated!'})">
                             <i class="material-icons right">done</i>
                             Save changes
                         </button>
@@ -127,7 +151,7 @@
             </div>
         </div>
         <br><br><br><br><br><br>
-        <a class="waves-effect waves-light btn-large" href="/planner" title="Go back!">
+        <a class="waves-effect waves-light btn-large" href="/tasks" title="Go back!">
             <i class="material-icons left">arrow_back</i> Go back to planner
         </a>
     </div>
