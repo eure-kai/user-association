@@ -74,10 +74,10 @@ app.get( "/", ( req, res ) => {
     res.render('index');
 });
 
-let tasksRouter = require("./routes/tasks.js");
+let tasksRouter = require("./public/routes/tasks.js");
 app.use("/tasks", requiresAuth(), tasksRouter);
 
-let categoriesRouter = require("./routes/categories.js");
+let categoriesRouter = require("./public/routes/categories.js");
 app.use("/categories", requiresAuth(), categoriesRouter);
 
 // start the server

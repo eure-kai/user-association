@@ -11,71 +11,42 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
     <link rel="stylesheet" href="/stylesheets/stuffStyle.css">
+
 </head>
 
 <body>
-    <!-- Nav bar -->
-    <header>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="/" class="brand-logo">Schedule Planner</a>
-                <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <ul id="desktop-nav" class="right hide-on-med-and-down">
-                    <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
-                    <% if (isLoggedIn) { %>
-                        <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
-                        <li><a href="/logout" class="btn red">Logout</a></li>                        
-                    <% } else { %>
-                        <li><a href="/login" class="btn blue">Login</a></li>
-                    <% } %>
-                </ul>
-            </div>
-        </nav>
-        <ul id="mobile-nav" class="sidenav">
-             <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-             <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
-             <% if (isLoggedIn) { %>
-                <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
-                <li><a href="/logout" class="btn red">Logout</a></li>                        
-            <% } else { %>
-                <li><a href="/login" class="btn blue">Login</a></li>
-            <% } %>
-        </ul>
-    </header>
+    <%- include('partials/navbar') %>
 
     <!-- rest of the body -->
     <div class="container">
         <div class="section flow-text" id="header">
-            <h1><%= taskName %></h1>
+            <h1><%= inventory.taskName %></h1>
             <table class="responsive-table">
                 <tr>
                     <th><h5><strong><u>Description:</strong></u></h5></th>
-                    <td><h5><%= description %></h5></td>
+                    <td><h5><%= inventory.description %></h5></td>
                 </tr>
                 <tr>
                     <th><h5><strong><u>Category:</strong></u></h5></th>
-                    <td><h5><%= categoryName %></h5></td>
+                    <td><h5><%= inventory.categoryName %></h5></td>
                 </tr>
                 <tr>
                     <th><h5><strong><u>Task Date:</strong></u></h5></th>
-                    <td><h5><%= taskDate %></h5></td>
+                    <td><h5><%= inventory.taskDateFormatted %></h5></td>
                 </tr>
                 <tr>
                     <th><h5><strong><u>Start Time:</strong></u></h5></th>
-                    <td><h5><%= startTimeFormatted %></h5></td>
+                    <td><h5><%= inventory.startTimeFormatted %></h5></td>
                 </tr>
                 <tr>
                     <th><h5><strong><u>End Time:</strong></u></h5></th>
-                    <td><h5><%= endTimeFormatted %></h5></td>
+                    <td><h5><%= inventory.endTimeFormatted %></h5></td>
                 </tr>      
                 <tr>
                     <th><h5><strong><u>Location:</strong></u></h5></th>
-                    <td><h5><%= location %></h5></td>
+                    <td><h5><%= inventory.location %></h5></td>
                 </tr> 
             </table>
          </div>
@@ -85,7 +56,7 @@
                 <i class="material-icons right">edit</i>
                 Edit
             </a>
-            <a class="btn-large waves-effect waves-light red right" onclick="M.toast({html: 'Task deleted!'})" href="/tasks/detail/<%= id %>/delete" %>>
+            <a class="btn-large waves-effect waves-light red right" onclick="M.toast({html: 'Task deleted!'})" href="/tasks/<%= inventory.taskId %>/delete" %>>
                 <i class="material-icons right">delete</i>Delete
             </a>
         </div>
@@ -93,48 +64,51 @@
         <div class="modal" id="taskEdit" tabindex="0">
             <div class="modal-content">
                 <h3>Update task:</h3>
-                <form method="post" action="/tasks/detail/<%= id%>">
+                <form method="post" action="/tasks/<%= inventory.taskId%>">
                     <div class="row">
                         <div class="input-field col s6">
-                            <label for="task_name">Task Name</label>
-                            <input type="text" name="taskName" id="taskNameUpdate" class="validate" data-length="32" value="<%= taskName %>" required>
+                            <label for="taskNameUpdate">Task Name</label>
+                            <input type="text" name="taskName" id="taskNameUpdate" class="validate" data-length="32" value="<%= inventory.taskName %>" required>
                         </div>
                         <div class="input-field col s6">
-                            <label for="desc">Description</label>
-                            <input type="text" name="description" id="descriptionUpdate" placeholder="Enter your description here" class="validate" data-length="32" value="<%= description %>" required>
-                        </div>    
+                            <label for="descriptionUpdate">Description</label>
+                            <input type="text" name="description" id="descriptionUpdate" placeholder="Enter your description here" class="validate" data-length="32" value="<%= inventory.description %>" required>
+                        </div>
+                    </div>    
+                
+                    <div class="row">        
                         <div class="input-field col s6">
                             <select type="number" id="categoryInput" name="category" required>
                                 <option value="" disabled> Choose your category </option>
-                                <option value=1   <% if (categoryId == 1) { %> selected <% } %>> School Assignment </option>
-                                <option value=2   <% if (categoryId == 2) { %> selected <% } %>> School TEST </option>
-                                <option value=3   <% if (categoryId == 3) { %> selected <% } %>> Tutor HW </option>
-                                <option value=4   <% if (categoryId == 4) { %> selected <% } %>> Extracurriculars </option>
-                                <option value=5   <% if (categoryId == 5) { %> selected <% } %>> Important Activity </option>
-                                <option value=6   <% if (categoryId == 6) { %> selected <% } %>> Leisure Time </option>
+                                <% for (let i = 0; i < categorylist.length; i++) { %>
+                                    <option value=<%=categorylist[i].categoryId %> 
+                                        <% if (inventory.categoryId == categorylist[i].categoryId) { %> selected <% } %> ><%= categorylist[i].categoryName %></option>
+                                <% } %>
                               </select>
                               <label for="categoryInput">Category:</label>
                         </div>
+                    
+                        <div class="input-field col s6">
+                            <label for="dateUpdate">Task Date</label>
+                            <input type="date" name="taskDate" id="dateUpdate" class="validate" data-length="32" value="<%= inventory.taskDate %>" required>
+                        </div>
                     </div>
+
                     <div class="row">
                         <div class="input-field col s6">
-                            <label for="dat">Task Date</label>
-                            <input type="date" name="date" id="dateUpdate" class="validate" data-length="32" value="<%= taskDate %>" required>
+                            <label for="startTimeUpdate">Start Time</label>
+                            <input type="time" name="startTime" id="startTimeUpdate" class="validate" data-length="32" value="<%= inventory.startTimeFormatted %>" required>
                         </div>
+
                         <div class="input-field col s6">
-                            <label for="stime">Start Time</label>
-                            <input type="time" name="startTime" id="startTimeUpdate" class="validate" data-length="32" value="<%= startTimeFormatted %>" required>
+                            <label for="endTimeUpdate">End Time</label>
+                            <input type="time" name="endTime" id="endTimeUpdate" class="validate" data-length="32" value="<%= inventory.endTimeFormatted %>" required>
                         </div>
-                        <div class="input-field col s6">
-                            <label for="etime">End Time</label>
-                            <input type="time" name="endTime" id="endTimeUpdate" class="validate" data-length="32" value="<%= endTimeFormatted %>" required>
-                        </div>
-                    </div>
-                    <div class="row">    
+
                         <div class="input-field col s6">
                             Location: 
                             <div class="input-field inline">
-                                <input type="text" name="location" id="locationUpdate" placeholder="New York City" class="validate" value="<%= location %>" data-length="32">
+                                <input type="text" name="location" id="locationUpdate" placeholder="New York City" class="validate" value="<%= inventory.location %>" data-length="32">
                             </div>
                         </div>    
                     </div>

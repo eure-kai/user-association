@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,42 +12,13 @@
 
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
     <link rel="stylesheet" href="/stylesheets/stuffStyle.css">
     
 </head>
+
 <body>
-    <!-- Nav bar -->
-    <header>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="/" class="brand-logo">Schedule Planner</a>
-                <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <ul id="desktop-nav" class="right hide-on-med-and-down">
-                    <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
-                    <% if (isLoggedIn) { %>
-                        <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
-                        <li><a href="/logout" class="btn red">Logout</a></li>                        
-                    <% } else { %>
-                        <li><a href="/login" class="btn blue">Login</a></li>
-                    <% } %>
-                </ul>
-            </div>
-        </nav>
-        <ul id="mobile-nav" class="sidenav">
-             <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-             <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
-             <% if (isLoggedIn) { %>
-                <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
-                <li><a href="/logout" class="btn red">Logout</a></li>                        
-            <% } else { %>
-                <li><a href="/login" class="btn blue">Login</a></li>
-            <% } %>
-        </ul>
-    </header>
+    <%- include('partials/navbar') %>
 
     <!-- rest of the body -->
     <div class="container">
@@ -57,7 +29,10 @@
                     <tr>
                         <th>Task Name</th>
                         <th>Description</th>
-                        <th>Time</th>
+                        <th>Category</th>
+                        <th>Task Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
                         <th>Location</th>
                         <th></th>
                     </tr>
@@ -68,12 +43,15 @@
                     <tr>
                         <td><%= inventory[i].taskName %></td>
                         <td><%= inventory[i].description %></td>
-                        <td><%= inventory[i].time %></td>
+                        <td><%= inventory[i].categoryName %></td>
+                        <td><%= inventory[i].taskDateFormatted %></td>
+                        <td><%= inventory[i].startTimeFormatted %></td>
+                        <td><%= inventory[i].endTimeFormatted %></td>
                         <td><%= inventory[i].location %></td>
                         <td>
-                            <a class="btn-small waves-effect waves-light" href=<%= "/tasks/detail/" + inventory[i].id %> >
+                            <a class="btn-small waves-effect waves-light" href=<%= "/tasks/" + inventory[i].taskId %> >
                                 <i class="material-icons right">edit</i>Info/Edit</a>
-                            <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Task deleted!'})" href="/tasks/detail/<%= inventory[i].id %>/delete">
+                            <a class="btn-small waves-effect waves-light red" onclick="M.toast({html: 'Task deleted!'})" href="/tasks/<%= inventory[i].taskId %>/delete">
                                 <i class="material-icons right">delete</i>Delete</a>
                         </td>    
                     </tr>
@@ -84,28 +62,45 @@
 
         <div class="section" id="addTasks">
             <h3>Add a task:</h3>
-            <form method="post" action="/tasks">
+            <form id="addForm" method="post" action="/tasks">
                 <div class="row">
-                            
                     <div class="input-field col s6">
-                        <label for="task_name">Task Name</label>
+                        <label for="taskNameInput">Task Name:</label>
                         <input type="text" name="taskName" id="taskNameInput" class="validate" data-length="32" required>
                     </div>
                     <div class="input-field col s6">
-                        <label for="desc">Description</label>
+                        <label for="descriptionInput">Description</label>
                         <input type="text" name="description" id="descriptionInput" placeholder="Enter your description here" class="validate" data-length="32" required>
                     </div>
                 </div>    
                 
                 <div class="row">
                     <div class="input-field col s6">
-                        Time:
+                        <select id="categoryInput" name="category" required>
+                            <option value="" disabled selected>Choose your category</option>
+                            <% for (let i = 0; i < categorylist.length; i++) { %>
+                                <option value=<%=categorylist[i].categoryId %>><%= categorylist[i].categoryName %></option>
+                            <% } %>
+                        </select>
+                        <label for="categoryInput">Category:</label>
+                    </div>
+
+                    <div class="input-field col s6">
+                        Date:
                         <div class="input-field inline">
-                            <input type="text" name="time" id="timeInput" class="validate" data-length="32">
+                            <input type="date" name="taskDate" id="timeInput" class="validate" data-length="32">
                         </div>
                     </div>
                 </div>
-                <div class="row">    
+                <div class="row">
+                    <div class="input-field col s6">
+                        <label for="startTimeInput">Start Time:</label>
+                        <input type="time" name="startTime" id="startTimeInput" class="validate" data-length="32" required>
+                    </div>
+                    <div class="input-field col s6">
+                        <label for="endTimeInput">End Time:</label>
+                        <input type="time" name="endTime" id="endTimeInput" class="validate" data-length="32" required>
+                    </div>
                     <div class="input-field col s6">
                         Location: 
                         <div class="input-field inline">
@@ -126,6 +121,7 @@
             <i class="material-icons right">home</i>
         </a>
     </div>
+
     <script src="/javascripts/materialize_autoinit.js"></script>
 </body>
 </html>

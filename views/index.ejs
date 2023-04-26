@@ -6,45 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule Planner</title>
     
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+   <!-- Compiled and minified CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <!-- Compiled and minified JavaScript -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+   <link rel="stylesheet" href="/stylesheets/stuffStyle.css">
 
 </head>
+
 <body>
-    <!-- Nav bar -->
-    <header>
-        <nav>
-            <div class="nav-wrapper">
-                <a href="/" class="brand-logo">Schedule Planner</a>
-                <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                <ul id="desktop-nav" class="right hide-on-med-and-down">
-                    <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-                    <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
-                    <% if (isLoggedIn) { %>
-                        <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
-                        <li><a href="/logout" class="btn red">Logout</a></li>                        
-                    <% } else { %>
-                        <li><a href="/login" class="btn blue">Login</a></li>
-                    <% } %>
-                </ul>
-            </div>
-        </nav>
-        <ul id="mobile-nav" class="sidenav">
-             <li><a href="/"><i class="material-icons left">home</i>Home</a></li>
-             <li><a href="/tasks"><i class="material-icons left">list</i>Planner</a></li>
-             <% if (isLoggedIn) { %>
-                <li><a href="/profile"><i class="material-icons left">person</i> Hello, <%=user.name%></a> </li>
-                <li><a href="/logout" class="btn red">Logout</a></li>                        
-            <% } else { %>
-                <li><a href="/login" class="btn blue">Login</a></li>
-            <% } %>
-        </ul>
-    </header>
+    <%- include('partials/navbar') %>
 
     <!-- rest of the body -->
     <div class="container">

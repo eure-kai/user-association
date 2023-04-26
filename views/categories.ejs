@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Planner</title>
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheets/stuffStyle.css">
+
+</head>
+
+<body>
+    <%- include('partials/navbar') %>
+
+    <!-- Actual page content! -->
+    <div class="container">
+        <div class="section" id="list">
+            <h1>Your Categories:</h1>
+            <table>
+                <tbody>
+                    <% for (let i = 0; i < categorylist.length; i++) { %>
+                    <tr>
+                        <td><%= categorylist[i].categoryName %></td>
+                        <td>
+                            <a class="btn-small waves-effect waves-light red" href="/categories/<%= categorylist[i].categoryId %>/delete">
+                                <i class="material-icons right">delete</i>
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="add">
+            <h2>Add a category:</h2>
+            <form id="addForm" method="post" action="/categories"> <!-- default action is the page's URL --> 
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="text" id="categoryNameInput" name="categoryName" class="validate" data-length="32" required>
+                        <label for="categoryNameInput">Category name:</label>
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light" type="submit">
+                    <i class="material-icons right">send</i>
+                    Submit
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/javascripts/materialize_autoinit.js"></script>
+
+</body>
+
+</html>
