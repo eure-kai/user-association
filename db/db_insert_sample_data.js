@@ -7,16 +7,16 @@ const fs = require("fs");
 
 /**** Delete *CONTENTS OF* existing tables (but not dropping tables themselves) ****/
 
-const delete_tasks_table_sql = fs.readFileSync(path.join(__dirname, "db", "queries", "init", "delete_tasks_table.sql"), {encoding: "UTF-8"});
+const delete_tasks_table_sql = fs.readFileSync(path.join(__dirname, "queries", "init", "delete_tasks_table.sql"), {encoding: "UTF-8"});
 db.execute(delete_tasks_table_sql);
 
-const delete_categories_table_sql = fs.readFileSync(path.join(__dirname, "db", "queries", "init", "delete_categories_table.sql"), {encoding: "UTF-8"});
+const delete_categories_table_sql = fs.readFileSync(path.join(__dirname, "queries", "init", "delete_categories_table.sql"), {encoding: "UTF-8"});
 db.execute(delete_categories_table_sql);
 
 
 /**** Create some sample categories and tasks ****/
 
-const insert_category_sql = fs.readFileSync(path.join(__dirname, "db", "queries", "init", "insert_category.sql"), {encoding: "UTF-8"});
+const insert_category_sql = fs.readFileSync(path.join(__dirname, "queries", "init", "insert_category.sql"), {encoding: "UTF-8"});
 
 db.execute(insert_category_sql, [1, 'School Assignment']);
 db.execute(insert_category_sql, [2, 'School TEST']);
@@ -24,7 +24,7 @@ db.execute(insert_category_sql, [3, 'Tutor HW']);
 db.execute(insert_category_sql, [4, 'Extracurriculars']);
 
 
-const insert_task_sql = fs.readFileSync(path.join(__dirname, "db", "queries", "init", "insert_task.sql"), {encoding: "UTF-8"});
+const insert_task_sql = fs.readFileSync(path.join(__dirname, "queries", "init", "insert_task.sql"), {encoding: "UTF-8"});
 
 //categoryId: 4 --> Extracurriculars
 db.execute(insert_task_sql, ['French Horn', 'Practice my instrument', 4, '2023-03-24', '17:00:00', '18:00:00', 'Lions Park']);
@@ -51,3 +51,5 @@ db.execute(insert_task_sql, ['Digital Electronics', 'Make presentation for comp 
 
 //categoryId: 5 --> Important Activity
 db.execute(insert_task_sql, ['Tony\'\s party', 'My best friend\'\s birthday party!', 5, '2023-03-31', '14:00:00', null, 'Palisades Mall']);
+
+db.end();

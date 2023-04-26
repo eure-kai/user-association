@@ -11,4 +11,4 @@ SET
 WHERE
     taskId = ?
 AND
-    userid = ?;
+    userId = ?;

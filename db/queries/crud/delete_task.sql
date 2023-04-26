@@ -4,4 +4,4 @@ FROM
 WHERE
     taskId = ?
 AND
-    userid = ?
+    userId = ?;

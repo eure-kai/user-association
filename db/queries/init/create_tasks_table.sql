@@ -2,6 +2,7 @@ CREATE TABLE tasks (
     taskId INT NOT NULL AUTO_INCREMENT,
     taskName VARCHAR(45) NOT NULL,
     description VARCHAR(150) NULL,
+    categoryId INT NOT NULL,
     taskDate DATE NULL,
     startTime TIME NULL,
     endTime TIME NULL,
