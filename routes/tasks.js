@@ -1,6 +1,6 @@
 const DEBUG = true;
 const express = require('express');
-const db = require('../../db/db_pool.js');
+const db = require('../db/db_pool.js');
 const fs = require("fs");
 const path = require("path");
 
@@ -8,8 +8,8 @@ let tasksRouter = express.Router();
 
 
 // define a route for the planner page
-const read_categories_all_sql = fs.readFileSync(path.join(__dirname, "..", "..", "db", "queries", "crud", "read_categories_all.sql"), {encoding: "UTF-8"});
-const read_tasks_all_sql = fs.readFileSync(path.join(__dirname, "..", "..", "db", "queries", "crud", "read_tasks_all.sql"), {encoding: "UTF-8"});
+const read_categories_all_sql = fs.readFileSync(path.join(__dirname, "..", "db", "queries", "crud", "read_categories_all.sql"), {encoding: "UTF-8"});
+const read_tasks_all_sql = fs.readFileSync(path.join(__dirname, "..", "db", "queries", "crud", "read_tasks_all.sql"), {encoding: "UTF-8"});
 
 tasksRouter.get("/", ( req, res) => {
     db.execute(read_tasks_all_sql, [req.oidc.user.sub], (error, results) => {
@@ -35,7 +35,7 @@ tasksRouter.get("/", ( req, res) => {
 
 
 //define a route for the task detail page
-const read_task_detail_sql = fs.readFileSync(path.join(__dirname, "..", "..", "db", "queries", "crud", "read_task_detail.sql"), {encoding: "UTF-8"});
+const read_task_detail_sql = fs.readFileSync(path.join(__dirname, "..", "db", "queries", "crud", "read_task_detail.sql"), {encoding: "UTF-8"});
 
 tasksRouter.get( "/:id", ( req, res ) => {
     db.execute(read_task_detail_sql, [req.params.id, req.oidc.user.sub], (error, results) => {
@@ -62,7 +62,7 @@ tasksRouter.get( "/:id", ( req, res ) => {
 });
 
 //define a route for the task CREATE
-const create_task_sql = fs.readFileSync(path.join(__dirname, "..", "..", "db", "queries", "crud", "insert_task.sql"), {encoding: "UTF-8"});
+const create_task_sql = fs.readFileSync(path.join(__dirname, "..", "db", "queries", "crud", "insert_task.sql"), {encoding: "UTF-8"});
 
 tasksRouter.post("/", ( req, res ) => {
     db.execute(create_task_sql, [req.body.taskName, req.body.description, req.body.category, req.body.taskDate, req.body.startTime, req.body.endTime, req.body.location, req.oidc.user.sub], (error, results) => {
@@ -77,7 +77,7 @@ tasksRouter.post("/", ( req, res ) => {
 });
 
 // define a route for task UPDATE
-const update_task_sql = fs.readFileSync(path.join(__dirname, "..", "..", "db", "queries", "crud", "update_task.sql"), {encoding: "UTF-8"});
+const update_task_sql = fs.readFileSync(path.join(__dirname, "..", "db", "queries", "crud", "update_task.sql"), {encoding: "UTF-8"});
 
 tasksRouter.post("/:id", ( req, res ) => {
     db.execute(update_task_sql, [req.body.taskName, req.body.description, req.body.category, req.body.taskDate, req.body.startTime, req.body.endTime, req.body.location, req.params.id, req.oidc.user.sub], (error, results) => {
@@ -91,7 +91,7 @@ tasksRouter.post("/:id", ( req, res ) => {
 })
 
 //define a route for the task delete
-const delete_task_sql = fs.readFileSync(path.join(__dirname, "..", "..", "db", "queries", "crud", "delete_task.sql"), {encoding: "UTF-8"});
+const delete_task_sql = fs.readFileSync(path.join(__dirname, "..", "db", "queries", "crud", "delete_task.sql"), {encoding: "UTF-8"});
 
 tasksRouter.get("/:id/delete", ( req, res ) => {
     db.execute(delete_task_sql, [req.params.id, req.oidc.user.sub], (error, results) => {

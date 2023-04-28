@@ -34,15 +34,15 @@
                 </tr>
                 <tr>
                     <th><h5><strong><u>Task Date:</strong></u></h5></th>
-                    <td><h5><%= inventory.taskDateFormatted %></h5></td>
+                    <td><h5><%= inventory.taskDateClean %></h5></td>
                 </tr>
                 <tr>
                     <th><h5><strong><u>Start Time:</strong></u></h5></th>
-                    <td><h5><%= inventory.startTimeFormatted %></h5></td>
+                    <td><h5><%= inventory.startTimeClean %></h5></td>
                 </tr>
                 <tr>
                     <th><h5><strong><u>End Time:</strong></u></h5></th>
-                    <td><h5><%= inventory.endTimeFormatted %></h5></td>
+                    <td><h5><%= inventory.endTimeClean %></h5></td>
                 </tr>      
                 <tr>
                     <th><h5><strong><u>Location:</strong></u></h5></th>
@@ -91,7 +91,7 @@
                         <div class="input-field col s6">
                             Date:
                             <div class="input-field inline">
-                                <input type="date" name="taskDate" id="dateUpdate" class="validate" data-length="32" value="<%= inventory.taskDate %>" required>
+                                <input type="date" name="taskDate" id="dateUpdate" class="validate" data-length="32" value="<%= inventory.taskDateForms %>" required>
                             </div>
                         </div>
                     </div>
@@ -99,12 +99,12 @@
                     <div class="row">
                         <div class="input-field col s6">
                             <label for="startTimeUpdate">Start Time</label>
-                            <input type="time" name="startTime" id="startTimeUpdate" class="validate" data-length="32" value="<%= inventory.startTimeFormatted %>" required>
+                            <input type="time" name="startTime" id="startTimeUpdate" placeholder="" class="validate" data-length="32" value="<%= inventory.startTimeForms %>" required>
                         </div>
 
                         <div class="input-field col s6">
                             <label for="endTimeUpdate">End Time</label>
-                            <input type="time" name="endTime" id="endTimeUpdate" class="validate" data-length="32" value="<%= inventory.endTimeFormatted %>" required>
+                            <input type="time" name="endTime" id="endTimeUpdate" placeholder="" class="validate" data-length="32" value="<%= inventory.endTimeForms %>" required>
                         </div>
 
                         <div class="input-field col s6">
